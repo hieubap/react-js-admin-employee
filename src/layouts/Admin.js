@@ -61,7 +61,7 @@ function Admin(props) {
             element={<Navigate to="/admin/dashboard" replace />}
           />
         </Routes>
-        <Footer fluid />
+        {/* <Footer fluid /> */}
       </div>
       {/* <FixedPlugin
         bgColor={backgroundColor}
