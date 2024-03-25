@@ -12,6 +12,8 @@ RUN npm config set legacy-peer-deps true
 # Install dependencies  
 RUN npm install
 
+RUN npm install -g serve
+
 # Copy the app source code to the container  
 COPY . .
 
@@ -19,4 +21,4 @@ COPY . .
 RUN npm run build
 
 # Start the app  
-CMD ["npx", "serve", "-s", "buid", "-l", "3000"]
+CMD ["serve", "-s", "buid", "-l", "3000"]
