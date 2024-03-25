@@ -1,9 +1,9 @@
 {
-  "name": "now-ui-dashboard-react",
+  "name": "react-js-admin-employee",
   "version": "1.5.2",
   "main": "dist/index.js",
   "private": true,
-  "homepage": "https://demos.creative-tim.com/now-ui-dashboard-react/#/",
+  "homepage": "/",
   "dependencies": {
     "antd": "^4.24.5",
     "bootstrap": "4.6.2",
@@ -23,7 +23,7 @@
     "styled-components": "^6.1.8"
   },
   "scripts": {
-    "start": "PORT=3100 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
