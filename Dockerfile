@@ -19,4 +19,4 @@ COPY . .
 RUN npm run build
 
 # Start the app  
-CMD ["npx", "serve", "-s", "buid", "-t", "3000"]
+CMD ["npx", "serve", "-s", "buid", "-l", "3000"]
