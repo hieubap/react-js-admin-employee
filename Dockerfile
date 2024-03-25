@@ -21,4 +21,4 @@ COPY . .
 RUN npm run build
 
 # Start the app  
-CMD ["serve", "-s", "buid", "-l", "3000"]
+CMD ["serve", "-s", "build", "-l", "3000"]
