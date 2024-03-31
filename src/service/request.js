@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8800";
+const API_URL = "http://14.225.205.222:8800";
 
 export const requestHeaders = {
   authorization: "",
