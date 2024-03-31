@@ -14,7 +14,14 @@ function TableView({
           <tr>
             {columns.map((prop, key) => {
               return (
-                <th key={key} style={{ width: prop.width }}>
+                <th
+                  key={key}
+                  style={{
+                    width: prop.width,
+                    minWidth: prop.minWidth,
+                    whiteSpace: "break-spaces",
+                  }}
+                >
                   {prop.title}
                 </th>
               );
@@ -33,8 +40,12 @@ function TableView({
                         onClick={rowClick(rowNum, item)}
                         style={{
                           padding: col.padding,
-                          borderLeft: col.borderHor ? "1px solid #f0f0f0" : null,
-                          borderRight: col.borderHor ? "1px solid #f0f0f0" : null,
+                          borderLeft: col.borderHor
+                            ? "1px solid #f0f0f0"
+                            : null,
+                          borderRight: col.borderHor
+                            ? "1px solid #f0f0f0"
+                            : null,
                         }}
                       >
                         <div

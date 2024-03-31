@@ -47,7 +47,7 @@ function ModalManager({ visible, setVisible, onSuccess = () => {}, data }) {
 
   const handleSubmit = () => {
     const data = state.modalData;
-    requestFetch(data ? "put" : "post", "/employee/member", data).then(
+    requestFetch(data?._id ? "put" : "post", "/employee/member", data).then(
       (res) => {
         if (res.code == 0) {
           notify("Thêm nhân sự thành công");

@@ -10,6 +10,9 @@ import Manager from "views/Manager";
 import TimeKeeping from "views/TimeKeeping";
 import Payroll from "views/Payroll";
 import Login from "views/Login";
+import LeaveForm from "views/LeaveForm";
+import Workday from "views/Workday";
+import Bonus from "views/Bonus";
 
 export const publicRoutes = [
   {
@@ -44,8 +47,29 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
+    path: "/take-leave",
+    name: "Xin nghỉ phép",
+    icon: "objects_spaceship",
+    component: <LeaveForm />,
+    layout: "/admin",
+  },
+  {
+    path: "/bonus",
+    name: "Chế độ / Khấu trừ",
+    icon: "objects_spaceship",
+    component: <Bonus />,
+    layout: "/admin",
+  },
+  {
+    path: "/work-day",
+    name: "Thống kê ngày công",
+    icon: "objects_spaceship",
+    component: <Workday />,
+    layout: "/admin",
+  },
+  {
     path: "/salary",
-    name: "Thống kê lương",
+    name: "Tổng kết lương",
     icon: "objects_spaceship",
     component: <Payroll />,
     layout: "/admin",

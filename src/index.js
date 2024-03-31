@@ -6,8 +6,6 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import "./assets/scss/now-ui-dashboard.scss";
 import "./assets/css/demo.css";
-import 'react-time-picker/dist/TimePicker.css';
-import 'react-clock/dist/Clock.css';
 import "antd/dist/antd.css";
 
 import AdminLayout from "./layouts/Admin";

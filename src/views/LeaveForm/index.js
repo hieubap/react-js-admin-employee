@@ -20,11 +20,12 @@ import TooltipView from "components/Tooltip";
 import moment from "moment";
 import { requestFetch } from "service/request";
 import { notify } from "utils/notification";
-import ModalManager from "./Modal";
+import ModalLeaveForm from "./Modal";
 import { ContainerStyle } from "./styled";
 import { formatPrice } from "utils";
+import useSearch from "hooks/useSearch";
 
-function Manager() {
+function TakeLeave() {
   const columns = [
     {
       title: "STT",
@@ -33,40 +34,20 @@ function Manager() {
     },
     {
       title: "Họ tên",
-      width: 150,
+      width: 120,
       dataIndex: "fullname",
+    },
+    {
+      title: "Người tạo",
+      width: 120,
+      // dataIndex: "member",
+      renderItem: (_, item) => item.member?.fullname,
     },
     {
       title: "Mã NV",
       width: 60,
-      dataIndex: "codeMember",
-    },
-    {
-      title: "Giới tính",
-      width: 60,
-      dataIndex: "gender",
-      renderItem: (v, _, idx) => (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Badge color={v == 1 ? "info" : "danger"}>
-            <div className="oneline">{v == 1 ? "Nam" : "Nữ"}</div>
-          </Badge>
-        </div>
-      ),
-    },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      width: 100,
-      renderItem: (v, _, idx) => (
-        <TooltipView id={"btn-edit-" + idx} title={v}>
-          <div className="oneline">{v}</div>
-        </TooltipView>
-      ),
+      renderItem: (_, item) => item.member?.codeMember,
+      // dataIndex: "codeMember",
     },
     {
       title: "Số điện thoại",
@@ -74,28 +55,28 @@ function Manager() {
       dataIndex: "phone",
     },
     {
-      title: "Ngày sinh",
-      dataIndex: "birth",
-      width: 100,
-      renderItem: (v) => moment(v).format("DD/MM/YYYY"),
+      title: "Thời gian nghỉ",
+      dataIndex: "date",
+      width: 130,
+      renderItem: (_, v) =>
+        moment(`${v.fromTime} ${v.fromDate}`, "HH:mm DD/MM/YYYY").format(
+          "HH:mm DD/MM/YYYY"
+        ) +
+        " " +
+        moment(`${v.toTime} ${v.toDate}`, "HH:mm DD/MM/YYYY").format(
+          "HH:mm DD/MM/YYYY"
+        ),
     },
     {
-      title: "Ngày vào công ty",
-      dataIndex: "joinTime",
+      title: "Ngày tạo",
+      dataIndex: "createdAt",
       width: 100,
-      renderItem: (v) => moment(v).format("DD/MM/YYYY"),
+      renderItem: (v) => moment(v).format("HH:mm DD/MM/YYYY"),
     },
     {
-      title: "Số ngày làm việc",
-      dataIndex: "joinTime",
-      width: 100,
-      renderItem: (v) => moment().diff(moment(v), "days") + " Ngày",
-    },
-    {
-      title: "Lương",
-      width: 100,
-      dataIndex: "salary",
-      renderItem: (v) => formatPrice(v),
+      title: "Lý do",
+      width: 200,
+      dataIndex: "reason",
     },
     {
       title: "Tiện ích",
@@ -128,8 +109,8 @@ function Manager() {
     _setState((pre) => ({ ...pre, ...data }));
   };
 
-  const refreshData = () => {
-    requestFetch("get", "/employee/member").then((res) => {
+  const refreshData = (text = "") => {
+    requestFetch("get", "/employee/leave-form?fullname=" + text).then((res) => {
       if (res.code == 0) {
         setState({ data: res.data });
       } else {
@@ -138,9 +119,11 @@ function Manager() {
     });
   };
 
-  React.useEffect(() => {
-    refreshData();
-  }, []);
+  // React.useEffect(() => {
+  //   refreshData();
+  // }, []);
+
+  const { onSearch } = useSearch({ refreshData });
   return (
     <>
       <PanelHeader size="sm" />
@@ -151,7 +134,7 @@ function Manager() {
               <CardHeader
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
-                <CardTitle tag="h4">Danh sách nhân viên</CardTitle>
+                <CardTitle tag="h4">Danh sách đơn xin nghỉ</CardTitle>
                 <Button
                   color="primary"
                   onClick={() => {
@@ -163,11 +146,8 @@ function Manager() {
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col md={4}>
-                    <Input placeholder="Search..." />
-                  </Col>
-                  <Col md={4}>
-                    <Input placeholder="Search..." />{" "}
+                  <Col md={12}>
+                    <Input placeholder="Tìm tên ..." onChange={onSearch} />
                   </Col>
                 </Row>
 
@@ -176,7 +156,7 @@ function Manager() {
             </Card>
           </Col>
 
-          <ModalManager
+          <ModalLeaveForm
             visible={state.visible}
             setVisible={(visible) => setState({ visible })}
             data={state.editData}
@@ -191,4 +171,4 @@ function Manager() {
   );
 }
 
-export default Manager;
+export default TakeLeave;
