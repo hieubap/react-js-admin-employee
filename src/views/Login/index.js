@@ -13,7 +13,7 @@ function Login() {
   const [visible, setVisible] = React.useState(false);
   const { saveAuthData } = useAuth();
   const onLogin = () => {
-    requestFetch("post", "/user/sign-in", {
+    requestFetch("post", "/account/sign-in", {
       username: dataRef.current.username,
       password: dataRef.current.password,
       router: "employee",
