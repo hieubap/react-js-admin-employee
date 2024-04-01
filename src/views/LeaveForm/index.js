@@ -24,8 +24,11 @@ import ModalLeaveForm from "./Modal";
 import { ContainerStyle } from "./styled";
 import { formatPrice } from "utils";
 import useSearch from "hooks/useSearch";
+import useAuth from "hooks/useAuth";
 
 function TakeLeave() {
+  const { authData } = useAuth();
+
   const columns = [
     {
       title: "STT",
@@ -46,7 +49,8 @@ function TakeLeave() {
     {
       title: "Mã NV",
       width: 60,
-      renderItem: (_, item) => item.member?.codeMember,
+      dataIndex: "code",
+      // renderItem: (_, item) => item.member?.codeMember,
       // dataIndex: "codeMember",
     },
     {
@@ -81,18 +85,22 @@ function TakeLeave() {
     {
       title: "Tiện ích",
       width: 80,
-      dataIndex: "salary",
       padding: 0,
       renderItem: (_, data, idx) => {
+        console.log(data, "data");
         return (
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <Button color="info" onClick={onEdit(data)}>
-              <i className={"now-ui-icons ui-1_settings-gear-63"} />
-            </Button>
+            {(
+              <>
+                <Button color="info" onClick={onEdit(data)}>
+                  <i className={"now-ui-icons ui-1_settings-gear-63"} />
+                </Button>
 
-            <Button color="danger">
-              <i className={"now-ui-icons ui-1_simple-remove"} />
-            </Button>
+                <Button color="danger">
+                  <i className={"now-ui-icons ui-1_simple-remove"} />
+                </Button>
+              </>
+            )}
           </div>
         );
       },

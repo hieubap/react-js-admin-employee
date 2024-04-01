@@ -1,4 +1,3 @@
-
 /*eslint-disable*/
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -7,6 +6,7 @@ import { Nav } from "reactstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 
 import logo from "logo-white.svg";
+import useAuth from "hooks/useAuth";
 
 var ps;
 
@@ -30,45 +30,46 @@ function Sidebar(props) {
       }
     };
   });
+
+  const { authData } = useAuth();
+  console.log(props, authData);
   return (
     <div className="sidebar" data-color={props.backgroundColor}>
       <div className="logo">
-        <a
-          href="https://www.creative-tim.com?ref=nudr-sidebar"
-          className="simple-text logo-mini"
-          target="_blank"
-        >
+        {/* <span className="simple-text logo-mini" target="_blank">
           <div className="logo-img">
             <img src={logo} alt="react-logo" />
           </div>
-        </a>
-        <a
-          href="https://www.creative-tim.com?ref=nudr-sidebar"
+        </span> */}
+        <div
           className="simple-text logo-normal"
           target="_blank"
+          style={{ textAlign: "center" }}
         >
-          DEMO
-        </a>
+          Quản lý nhân viên
+        </div>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
-          {props.routes.map((prop, key) => {
-            if (prop.redirect) return null;
-            return (
-              <li
-                className={
-                  activeRoute(prop.layout + prop.path) +
-                  (prop.pro ? " active active-pro" : "")
-                }
-                key={key}
-              >
-                <NavLink to={prop.layout + prop.path} className="nav-link">
-                  <i className={"now-ui-icons " + prop.icon} />
-                  <p>{prop.name}</p>
-                </NavLink>
-              </li>
-            );
-          })}
+          {props.routes
+            .filter((i) => authData.roles?.some((r) => i.roles.includes(r)))
+            .map((prop, key) => {
+              if (prop.redirect) return null;
+              return (
+                <li
+                  className={
+                    activeRoute(prop.layout + prop.path) +
+                    (prop.pro ? " active active-pro" : "")
+                  }
+                  key={key}
+                >
+                  <NavLink to={prop.layout + prop.path} className="nav-link">
+                    <i className={"now-ui-icons " + prop.icon} />
+                    <p>{prop.name}</p>
+                  </NavLink>
+                </li>
+              );
+            })}
         </Nav>
       </div>
     </div>

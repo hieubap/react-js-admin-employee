@@ -4,20 +4,26 @@ import { requestHeaders, requestFetch } from "service/request";
 import { notificationAlert } from "index";
 import { notify } from "utils/notification";
 import { Navigate } from "react-router-dom";
+import useAuth from "hooks/useAuth";
+import ModalLeaveForm from "views/LeaveForm/Modal";
 
 function Login() {
   const dataRef = React.useRef({});
   const [isSignin, setSignin] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
+  const { saveAuthData } = useAuth();
   const onLogin = () => {
     requestFetch("post", "/user/sign-in", {
       username: dataRef.current.username,
       password: dataRef.current.password,
+      router: "employee",
     }).then((res) => {
       console.log(res, "res");
       if (res.code != 200) {
         notify(res.message, "danger");
       } else {
         requestHeaders.authorization = "Bearer " + res.data.token;
+        saveAuthData(res.data);
         notify("Đăng nhập thành công");
         setSignin(true);
       }
@@ -35,9 +41,9 @@ function Login() {
                 <form className="">
                   <div className="card-login card-plain card">
                     <div className="card-header">
-                      <div className="logo-container">
+                      {/* <div className="logo-container">
                         <img src="" alt="now-logo" />
-                      </div>
+                      </div> */}
                     </div>
                     <div className="card-body">
                       <div className="no-border form-control-lg  input-group">
@@ -63,7 +69,7 @@ function Login() {
                         </div>
                         <input
                           placeholder="Password..."
-                          type="text"
+                          type="password"
                           className="form-control"
                           onChange={(e) => {
                             dataRef.current.password = e.target.value;
@@ -78,23 +84,33 @@ function Login() {
                       >
                         Login
                       </a>
-                      {/* <div className="pull-left">
-                        <h6>
-                          <a href="#pablo" className="link footer-link">
-                            Create Account
-                          </a>
-                        </h6>
-                      </div>
-                      <div className="pull-right">
-                        <h6>
-                          <a href="#pablo" className="link footer-link">
-                            Need Help?
-                          </a>
-                        </h6>
-                      </div> */}
                     </div>
                   </div>
                 </form>
+                <div className="pull-left">
+                  <h6>
+                    <span
+                      href="#pablo"
+                      className="link footer-link"
+                      style={{ color: "white" }}
+                    >
+                      Bạn có thể viết đơn xin nghỉ phép
+                    </span>
+                  </h6>
+                </div>
+                <div className="pull-right">
+                  <h6>
+                    <div
+                      className="link footer-link"
+                      style={{ color: "#fa7a50", cursor: "pointer" }}
+                      onClick={() => {
+                        setVisible(true);
+                      }}
+                    >
+                      Tại đây
+                    </div>
+                  </h6>
+                </div>
               </div>
             </div>
           </div>
@@ -102,6 +118,10 @@ function Login() {
         <div className="full-page-background" />
         <footer className="footer"></footer>
       </div>
+      <ModalLeaveForm
+        visible={visible}
+        setVisible={(visible) => setVisible(false)}
+      />
     </ContainerStyle>
   );
 }

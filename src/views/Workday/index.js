@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 
 import PanelHeader from "components/PanelHeader/PanelHeader.js";
+import { DatePicker } from "antd";
 
 import { thead, tbody } from "variables/general";
 import TableView from "components/TableView";
@@ -24,11 +25,11 @@ import { requestFetch } from "service/request";
 import { notify } from "utils/notification";
 
 function Workday() {
-  const [visible, setVisible] = useState(false);
   const [state, _setState] = useState({
     data: [],
     memberList: [],
     checkingList: [],
+    month: moment(),
   });
   const setState = (data) => {
     _setState((pre) => ({ ...pre, ...data }));
@@ -47,7 +48,7 @@ function Workday() {
         fixedLeft: true,
       },
       ...array.map((i) => {
-        const d = moment().startOf("month").add(i, "days");
+        const d = moment(state.month).startOf("month").add(i, "days");
         return {
           title: d.format("DD"),
           dataIndex: d.format("DDMMYYYY"),
@@ -56,18 +57,6 @@ function Workday() {
           // renderItem: (v) => <div style={{ textAlign: "center" }}>{v}</div>,
         };
       }),
-      {
-        title: "Đã dùng",
-        width: 60,
-        textAlign: "center",
-        dataIndex: "total",
-      },
-      {
-        title: "Còn lại",
-        width: 60,
-        textAlign: "center",
-        dataIndex: "total",
-      },
       {
         title: "Số công",
         width: 60,
@@ -81,7 +70,7 @@ function Workday() {
         renderItem: () => 23,
       },
     ];
-  }, []);
+  }, [state.month]);
 
   const refreshMemberList = () => {
     requestFetch("get", "/employee/member").then((res) => {
@@ -121,11 +110,19 @@ function Workday() {
         }),
         {
           fullname: item.fullname,
-          total: checkInOutData.reduce((a, b) => a + 1, 0),
+          total: checkInOutData.reduce(
+            (a, b) =>
+              a +
+              (moment(b.dateKey, "DDMMYYYY").format("MMYYYY") ==
+              moment(state.month).format("MMYYYY")
+                ? 1
+                : 0),
+            0
+          ),
         }
       );
     });
-  }, [state.memberList, state.checkingList]);
+  }, [state.memberList, state.checkingList, state.month]);
 
   console.log(dataPayroll, "dataPayroll", state);
   return (
@@ -150,11 +147,17 @@ function Workday() {
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col md={4}>
-                    <Input placeholder="Search..." />
-                  </Col>
-                  <Col md={4}>
-                    <Input placeholder="Search..." />{" "}
+                  <Col md="4">
+                    <DatePicker
+                      style={{ width: "100%" }}
+                      format={"MM/YYYY"}
+                      picker="month"
+                      value={state.month}
+                      onChange={(month) => {
+                        setState({ month });
+                      }}
+                      placeholder="Chọn tháng"
+                    />
                   </Col>
                 </Row>
                 <TableView columns={columns} data={dataPayroll} />

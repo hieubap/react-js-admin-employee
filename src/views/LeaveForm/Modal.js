@@ -86,9 +86,6 @@ function ModalLeaveForm({ visible, setVisible, onSuccess = () => {}, data }) {
       style={{ maxWidth: 1000 }}
     >
       <Card>
-        <CardHeader>
-          <h5 className="title">Edit Profile</h5>
-        </CardHeader>
         <CardBody
           style={{
             display: "flex",
@@ -185,6 +182,22 @@ function ModalLeaveForm({ visible, setVisible, onSuccess = () => {}, data }) {
                   placeholder="Bùi Dũng"
                   value={state.modalData.fullname || ""}
                   onChange={onChange("fullname")}
+                />
+              </span>
+              <span style={{ fontFamily: '"Times New Roman"', marginLeft: 30 }}>
+                Mã nhân viên *:
+              </span>
+              <span style={{ fontFamily: '"Times New Roman"' }}>&nbsp; </span>
+              <span style={{ fontFamily: '"Times New Roman"' }}>
+                <input
+                  style={{
+                    border: "none",
+                    borderBottom: "1px dashed",
+                    marginLeft: 5,
+                  }}
+                  placeholder="NV0011"
+                  value={state.modalData.code || ""}
+                  onChange={onChange("code")}
                 />
               </span>
             </p>

@@ -23,6 +23,8 @@ import moment from "moment";
 import { requestFetch } from "service/request";
 import { notify } from "utils/notification";
 import { formatPrice } from "utils";
+import { DatePicker } from "antd";
+import useSearch from "hooks/useSearch";
 
 function Payroll() {
   const [visible, setVisible] = useState(false);
@@ -30,6 +32,7 @@ function Payroll() {
     data: [],
     memberList: [],
     checkingList: [],
+    month: moment(),
   });
   const setState = (data) => {
     _setState((pre) => ({ ...pre, ...data }));
@@ -134,14 +137,16 @@ function Payroll() {
     ];
   }, []);
 
-  const refreshMemberList = () => {
-    requestFetch("get", "/employee/member/statistics-salary").then((res) => {
-      if (res.code == 0) {
-        setState({ memberList: res.data });
-      } else {
-        notify(res.message, "danger");
+  const refreshMemberList = (text = "") => {
+    requestFetch("get", "/employee/member/statistics-salary?text=" + text).then(
+      (res) => {
+        if (res.code == 0) {
+          setState({ memberList: res.data });
+        } else {
+          notify(res.message, "danger");
+        }
       }
-    });
+    );
   };
 
   React.useEffect(() => {
@@ -154,10 +159,12 @@ function Payroll() {
         (i) => i.userId == item._id
       );
       const dayOff = item.leaveForms.filter(
-        (i) => moment(i.fromDate).format("MMYYYY") == moment().format("MMYYYY")
+        (i) =>
+          moment(i.fromDate).format("MMYYYY") == state.month.format("MMYYYY")
       ).length;
       const dayWork = item.checkings.filter(
-        (i) => moment(i.checkIn).format("MMYYYY") == moment().format("MMYYYY")
+        (i) =>
+          moment(i.checkIn).format("MMYYYY") == state.month.format("MMYYYY")
       ).length;
 
       return {
@@ -165,7 +172,9 @@ function Payroll() {
         dayOff,
         dayWork,
         sumBonus: item.bonus.reduce((a, b) => {
-          if (moment(b.dateApply).format("MMYYYY") != moment().format("MMYYYY"))
+          if (
+            moment(b.dateApply).format("MMYYYY") != state.month.format("MMYYYY")
+          )
             return a;
           const v = b.balance - 0;
           return a + (v > 0 ? v : 0);
@@ -177,9 +186,10 @@ function Payroll() {
         salaryWorkDay: (dayWork / numDay) * item.salary,
       };
     });
-  }, [state.memberList, state.checkingList]);
+  }, [state.memberList, state.checkingList, state.month]);
 
   console.log(dataPayroll, "dataPayroll", state);
+  const { onSearch } = useSearch({ refreshData: refreshMemberList });
   return (
     <>
       <PanelHeader size="sm" />
@@ -190,7 +200,7 @@ function Payroll() {
               <CardHeader
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
-                <CardTitle tag="h4">Thống kê</CardTitle>
+                <CardTitle tag="h4">Tổng kết lương</CardTitle>
                 {/* <Button
                   color="primary"
                   onClick={() => {
@@ -202,12 +212,18 @@ function Payroll() {
               </CardHeader>
               <CardBody>
                 <Row>
-                  <Col md={4}>
-                    <Input placeholder="Search..." />
+                  <Col md={8}>
+                    <Input placeholder="Tìm theo tên ..." onChange={onSearch} />
                   </Col>
-                  <Col md={4}>
-                    <Input placeholder="Search..." />{" "}
-                  </Col>
+                  <DatePicker
+                    format={"MM/YYYY"}
+                    picker="month"
+                    value={state.month}
+                    onChange={(month) => {
+                      setState({ month });
+                    }}
+                    placeholder="Chọn tháng"
+                  />
                 </Row>
                 <TableView columns={columns} data={dataPayroll} />
               </CardBody>

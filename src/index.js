@@ -1,4 +1,3 @@
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
@@ -12,16 +11,22 @@ import AdminLayout from "./layouts/Admin";
 import PublicLayout from "./layouts/Public";
 
 import NotificationAlert from "react-notification-alert";
+import useAuth from "hooks/useAuth";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 export const notificationAlert = React.createRef();
-root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/p/*" element={<PublicLayout />} />
-      <Route path="/admin/*" element={<AdminLayout />} />
-      <Route path="*" element={<Navigate to="/p/login" replace />} />
-    </Routes>
-    <NotificationAlert ref={notificationAlert} />
-  </BrowserRouter>
-);
+const App = () => {
+  useAuth();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/p/*" element={<PublicLayout />} />
+        <Route path="/admin/*" element={<AdminLayout />} />
+        <Route path="*" element={<Navigate to="/p/login" replace />} />
+      </Routes>
+      <NotificationAlert ref={notificationAlert} />
+    </BrowserRouter>
+  );
+};
+root.render(<App />);

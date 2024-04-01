@@ -38,6 +38,7 @@ var dashRoutes = [
     icon: "objects_spaceship",
     component: <Manager />,
     layout: "/admin",
+    roles: ["SUPER_ADMIN", "USER_EMPLOYEE", "ADMIN_EMPLOYEE"],
   },
   {
     path: "/check-in",
@@ -45,6 +46,7 @@ var dashRoutes = [
     icon: "objects_spaceship",
     component: <TimeKeeping />,
     layout: "/admin",
+    roles: ["SUPER_ADMIN", "ADMIN_EMPLOYEE"],
   },
   {
     path: "/take-leave",
@@ -52,6 +54,7 @@ var dashRoutes = [
     icon: "objects_spaceship",
     component: <LeaveForm />,
     layout: "/admin",
+    roles: ["SUPER_ADMIN", "USER_EMPLOYEE", "ADMIN_EMPLOYEE"],
   },
   {
     path: "/bonus",
@@ -59,6 +62,7 @@ var dashRoutes = [
     icon: "objects_spaceship",
     component: <Bonus />,
     layout: "/admin",
+    roles: ["SUPER_ADMIN", "ADMIN_EMPLOYEE"],
   },
   {
     path: "/work-day",
@@ -66,6 +70,7 @@ var dashRoutes = [
     icon: "objects_spaceship",
     component: <Workday />,
     layout: "/admin",
+    roles: ["SUPER_ADMIN", "USER_EMPLOYEE", "ADMIN_EMPLOYEE"],
   },
   {
     path: "/salary",
@@ -73,6 +78,7 @@ var dashRoutes = [
     icon: "objects_spaceship",
     component: <Payroll />,
     layout: "/admin",
+    roles: ["SUPER_ADMIN", "ADMIN_EMPLOYEE"],
   },
   // {
   //   path: "/maps",
