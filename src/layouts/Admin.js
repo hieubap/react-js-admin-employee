@@ -12,11 +12,13 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import useAuth from "hooks/useAuth";
 
 var ps;
 
 function Admin(props) {
-  console.log(routes,'routes...');
+  console.log(routes, "routes...");
+  const { authData } = useAuth();
   const location = useLocation();
   const [backgroundColor, setBackgroundColor] = React.useState("orange");
   const mainPanel = React.useRef();
@@ -42,20 +44,36 @@ function Admin(props) {
   };
   return (
     <div className="wrapper">
-      <Sidebar {...props} routes={routes} backgroundColor={backgroundColor} />
+      <Sidebar
+        {...props}
+        routes={routes.filter((item) => {
+          return (
+            !item.roles?.length ||
+            item.roles?.some((r) => authData?.roles?.includes(r))
+          );
+        })}
+        backgroundColor={backgroundColor}
+      />
       <div className="main-panel" ref={mainPanel}>
         <DemoNavbar {...props} />
         <Routes>
-          {routes.map((prop, key) => {
-            return (
-              <Route
-                path={prop.path}
-                element={prop.component}
-                key={key}
-                exact
-              />
-            );
-          })}
+          {routes
+            .filter((item) => {
+              return (
+                !item.roles?.length ||
+                item.roles?.some((r) => authData?.roles?.includes(r))
+              );
+            })
+            .map((prop, key) => {
+              return (
+                <Route
+                  path={prop.path}
+                  element={prop.component}
+                  key={key}
+                  exact
+                />
+              );
+            })}
           <Route
             path="/admin"
             element={<Navigate to="/admin/dashboard" replace />}

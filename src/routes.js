@@ -13,6 +13,7 @@ import Login from "views/Login";
 import LeaveForm from "views/LeaveForm";
 import Workday from "views/Workday";
 import Bonus from "views/Bonus";
+import Blog from "views/Blog";
 
 export const publicRoutes = [
   {
@@ -39,6 +40,14 @@ var dashRoutes = [
     component: <Manager />,
     layout: "/admin",
     roles: ["SUPER_ADMIN", "USER_EMPLOYEE", "ADMIN_EMPLOYEE"],
+  },
+  {
+    path: "/blog",
+    name: "Blog",
+    icon: "objects_spaceship",
+    component: <Blog />,
+    layout: "/admin",
+    roles: ["SUPER_ADMIN", "VAPE_ADMIN"],
   },
   {
     path: "/check-in",

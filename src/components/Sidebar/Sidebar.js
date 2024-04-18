@@ -46,7 +46,7 @@ function Sidebar(props) {
           target="_blank"
           style={{ textAlign: "center" }}
         >
-          Quản lý nhân viên
+          Quản lý hệ thống
         </div>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>

@@ -46,11 +46,11 @@ function TableView({
                           borderRight: col.borderHor
                             ? "1px solid #f0f0f0"
                             : null,
+                          width: col.width,
                         }}
                       >
                         <div
                           style={{
-                            width: col.width,
                             overflow: "hidden",
                             textAlign: col.textAlign,
                           }}
@@ -91,7 +91,10 @@ function TableView({
                 .filter((c) => c.fixedLeft)
                 .map((prop, key) => {
                   return (
-                    <th key={key} style={{ width: prop.width }}>
+                    <th
+                      key={key}
+                      style={{ width: prop.width, textAlign: prop.textAlign }}
+                    >
                       {prop.title}
                     </th>
                   );
