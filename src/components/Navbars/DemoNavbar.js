@@ -27,7 +27,6 @@ function DemoNavbar(props) {
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
-  const { authData } = useAuth();
   const toggle = () => {
     if (isOpen) {
       setColor("transparent");
@@ -39,7 +38,6 @@ function DemoNavbar(props) {
   const dropdownToggle = (e) => {
     setDropdownOpen(!dropdownOpen);
   };
-  console.log(authData, "authData?.roles");
   const getBrand = () => {
     var name;
     routes.map((prop, key) => {

@@ -1,5 +1,5 @@
 const API_URL = window.location.origin.includes("localhost:3000")
-  ? "http://localhost:8800"
+  ? "http://14.225.205.222:8800"
   : "http://14.225.205.222:8800";
 export const FILE_URL = API_URL + "/file/";
 export const requestHeaders = {

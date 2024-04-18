@@ -7,6 +7,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 
 import logo from "logo-white.svg";
 import useAuth from "hooks/useAuth";
+import dashRoutes from "routes";
 
 var ps;
 
@@ -30,9 +31,8 @@ function Sidebar(props) {
       }
     };
   });
-
   const { authData } = useAuth();
-  console.log(props, authData);
+  console.log(authData, "authData===");
   return (
     <div className="sidebar" data-color={props.backgroundColor}>
       <div className="logo">
@@ -51,8 +51,14 @@ function Sidebar(props) {
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
-          {props.routes
-            .filter((i) => authData.roles?.some((r) => i.roles.includes(r)))
+          {dashRoutes
+            .filter((item) => {
+              // console.log(item.roles, "item", authData);
+              return (
+                !item.roles?.length ||
+                item.roles?.some((r) => authData?.roles?.includes(r))
+              );
+            })
             .map((prop, key) => {
               if (prop.redirect) return null;
               return (

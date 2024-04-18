@@ -18,9 +18,8 @@ var ps;
 
 function Admin(props) {
   console.log(routes, "routes...");
-  const { authData } = useAuth();
   const location = useLocation();
-  const [backgroundColor, setBackgroundColor] = React.useState("orange");
+  const [backgroundColor] = React.useState("orange");
   const mainPanel = React.useRef();
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -39,41 +38,33 @@ function Admin(props) {
     document.scrollingElement.scrollTop = 0;
     mainPanel.current.scrollTop = 0;
   }, [location]);
-  const handleColorClick = (color) => {
-    setBackgroundColor(color);
-  };
+
   return (
     <div className="wrapper">
       <Sidebar
         {...props}
-        routes={routes.filter((item) => {
-          return (
-            !item.roles?.length ||
-            item.roles?.some((r) => authData?.roles?.includes(r))
-          );
-        })}
+        // routes={routes.filter((item) => {
+        //   // console.log(item.roles, "item", authData);
+        //   return (
+        //     !item.roles?.length ||
+        //     item.roles?.some((r) => authData?.roles?.includes(r))
+        //   );
+        // })}
         backgroundColor={backgroundColor}
       />
       <div className="main-panel" ref={mainPanel}>
         <DemoNavbar {...props} />
         <Routes>
-          {routes
-            .filter((item) => {
-              return (
-                !item.roles?.length ||
-                item.roles?.some((r) => authData?.roles?.includes(r))
-              );
-            })
-            .map((prop, key) => {
-              return (
-                <Route
-                  path={prop.path}
-                  element={prop.component}
-                  key={key}
-                  exact
-                />
-              );
-            })}
+          {routes.map((prop, key) => {
+            return (
+              <Route
+                path={prop.path}
+                element={prop.component}
+                key={key}
+                exact
+              />
+            );
+          })}
           <Route
             path="/admin"
             element={<Navigate to="/admin/dashboard" replace />}
