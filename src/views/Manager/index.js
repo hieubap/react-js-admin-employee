@@ -23,6 +23,7 @@ import { notify } from "utils/notification";
 import ModalManager from "./Modal";
 import { ContainerStyle } from "./styled";
 import { formatPrice } from "utils";
+import useSearch from "hooks/useSearch";
 
 function Manager() {
   const columns = [
@@ -128,8 +129,8 @@ function Manager() {
     _setState((pre) => ({ ...pre, ...data }));
   };
 
-  const refreshData = () => {
-    requestFetch("get", "/employee/member").then((res) => {
+  const refreshData = (text = "") => {
+    requestFetch("get", "/employee/member?text=" + text).then((res) => {
       if (res.code == 0) {
         setState({ data: res.data });
       } else {
@@ -141,6 +142,8 @@ function Manager() {
   React.useEffect(() => {
     refreshData();
   }, []);
+
+  const { onSearch } = useSearch({ refreshData });
   return (
     <>
       <PanelHeader size="sm" />
@@ -164,11 +167,14 @@ function Manager() {
               <CardBody>
                 <Row>
                   <Col md={4}>
-                    <Input placeholder="Search..." />
+                    <Input
+                      placeholder="Search..."
+                      onChange={onSearch}
+                    />
                   </Col>
-                  <Col md={4}>
+                  {/* <Col md={4}>
                     <Input placeholder="Search..." />{" "}
-                  </Col>
+                  </Col> */}
                 </Row>
 
                 <TableView columns={columns} data={state.data} />
