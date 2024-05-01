@@ -24,6 +24,7 @@ import ModalManager from "./Modal";
 import { ContainerStyle } from "./styled";
 import { formatPrice } from "utils";
 import useSearch from "hooks/useSearch";
+import ConfirmDelete from "components/ConfirmDelete";
 
 function Manager() {
   const columns = [
@@ -110,7 +111,7 @@ function Manager() {
               <i className={"now-ui-icons ui-1_settings-gear-63"} />
             </Button>
 
-            <Button color="danger">
+            <Button color="danger" onClick={onDelete(data)}>
               <i className={"now-ui-icons ui-1_simple-remove"} />
             </Button>
           </div>
@@ -121,6 +122,12 @@ function Manager() {
 
   const onEdit = (data) => () => {
     setState({ editData: data, visible: true });
+  };
+  const onDelete = (data) => () => {
+    setState({
+      deleteId: data._id,
+      visibleDelete: true,
+    });
   };
   const [state, _setState] = useState({
     data: [],
@@ -167,10 +174,7 @@ function Manager() {
               <CardBody>
                 <Row>
                   <Col md={4}>
-                    <Input
-                      placeholder="Search..."
-                      onChange={onSearch}
-                    />
+                    <Input placeholder="Search..." onChange={onSearch} />
                   </Col>
                   {/* <Col md={4}>
                     <Input placeholder="Search..." />{" "}
@@ -188,9 +192,29 @@ function Manager() {
             data={state.editData}
             onSuccess={refreshData}
           />
-          {/* <Col md={4}>
-            
-          </Col> */}
+
+          <ConfirmDelete
+            visible={state.visibleDelete}
+            setVisible={(visibleDelete) => {
+              setState({ visibleDelete });
+            }}
+            onSuccess={() => {
+              requestFetch(
+                "delete",
+                "/employee/member/" + state.deleteId,
+                {}
+              ).then((res) => {
+                if (res.code == 0) {
+                  notify("Xóa thành công");
+                  setState({
+                    visibleDelete: false,
+                  });
+                } else {
+                  notify(res.message, "danger");
+                }
+              });
+            }}
+          />
         </Row>
       </ContainerStyle>
     </>

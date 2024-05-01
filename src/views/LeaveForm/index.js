@@ -25,6 +25,7 @@ import { ContainerStyle } from "./styled";
 import { formatPrice } from "utils";
 import useSearch from "hooks/useSearch";
 import useAuth from "hooks/useAuth";
+import ConfirmDelete from "components/ConfirmDelete";
 
 function TakeLeave() {
   const { authData } = useAuth();
@@ -90,17 +91,17 @@ function TakeLeave() {
         console.log(data, "data");
         return (
           <div style={{ display: "flex", flexDirection: "row" }}>
-            {(
+            {
               <>
                 <Button color="info" onClick={onEdit(data)}>
                   <i className={"now-ui-icons ui-1_settings-gear-63"} />
                 </Button>
 
-                <Button color="danger">
+                <Button color="danger" onClick={onDelete(data)}>
                   <i className={"now-ui-icons ui-1_simple-remove"} />
                 </Button>
               </>
-            )}
+            }
           </div>
         );
       },
@@ -124,6 +125,13 @@ function TakeLeave() {
       } else {
         notify(res.message, "danger");
       }
+    });
+  };
+
+  const onDelete = (data) => () => {
+    setState({
+      deleteId: data._id,
+      visibleDelete: true,
     });
   };
 
@@ -170,9 +178,30 @@ function TakeLeave() {
             data={state.editData}
             onSuccess={refreshData}
           />
-          {/* <Col md={4}>
-            
-          </Col> */}
+
+          <ConfirmDelete
+            visible={state.visibleDelete}
+            setVisible={(visibleDelete) => {
+              setState({ visibleDelete });
+            }}
+            onSuccess={() => {
+              requestFetch(
+                "delete",
+                "/employee/leave-form/" + state.deleteId,
+                {}
+              ).then((res) => {
+                if (res.code == 0) {
+                  notify("Xóa thành công");
+                  setState({
+                    visibleDelete: false,
+                  });
+                  refreshData();
+                } else {
+                  notify(res.message, "danger");
+                }
+              });
+            }}
+          />
         </Row>
       </ContainerStyle>
     </>

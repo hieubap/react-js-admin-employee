@@ -26,6 +26,7 @@ import { ContainerStyle } from "./styled";
 import { formatPrice } from "utils";
 import useSearch from "hooks/useSearch";
 import { notify } from "utils/notification";
+import ConfirmDelete from "components/ConfirmDelete";
 
 function Bonus() {
   const [visible, setVisible] = useState(false);
@@ -97,7 +98,7 @@ function Bonus() {
                 <i className={"now-ui-icons ui-1_settings-gear-63"} />
               </Button>
 
-              <Button color="danger">
+              <Button color="danger" onClick={onDelete(data)}>
                 <i className={"now-ui-icons ui-1_simple-remove"} />
               </Button>
             </div>
@@ -114,6 +115,13 @@ function Bonus() {
       } else {
         notify(res.message, "danger");
       }
+    });
+  };
+
+  const onDelete = (data) => () => {
+    setState({
+      deleteId: data._id,
+      visibleDelete: true,
     });
   };
 
@@ -196,6 +204,28 @@ function Bonus() {
         setVisible={(visible) => setState({ visible })}
         data={state.editData}
         onSuccess={refreshBonus}
+      />
+
+      <ConfirmDelete
+        visible={state.visibleDelete}
+        setVisible={(visibleDelete) => {
+          setState({ visibleDelete });
+        }}
+        onSuccess={() => {
+          requestFetch("delete", "/employee/bonus/" + state.deleteId, {}).then(
+            (res) => {
+              if (res.code == 0) {
+                notify("Xóa thành công");
+                setState({
+                  visibleDelete: false,
+                });
+                refreshBonus();
+              } else {
+                notify(res.message, "danger");
+              }
+            }
+          );
+        }}
       />
     </ContainerStyle>
   );
