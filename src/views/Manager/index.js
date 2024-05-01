@@ -206,6 +206,7 @@ function Manager() {
               ).then((res) => {
                 if (res.code == 0) {
                   notify("Xóa thành công");
+                  refreshData()
                   setState({
                     visibleDelete: false,
                   });
