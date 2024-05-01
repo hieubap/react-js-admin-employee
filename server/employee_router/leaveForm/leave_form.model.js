@@ -20,6 +20,8 @@ const modelSchema = new Schema(
     signature: { type: String },
     status: { type: Number, default: 1 },
     ownerId: { type: String },
+
+    deleted: { type: Boolean },
   },
   {
     // _id: false,

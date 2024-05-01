@@ -17,6 +17,7 @@ const leaveFormService = async (app) => {
               $regex: req.query?.fullname || "",
               $options: "i",
             },
+            deleted: { $ne: true },
           },
         },
         // {
@@ -77,6 +78,26 @@ const leaveFormService = async (app) => {
     try {
       const body = req.body;
       const data = await LeaveFormModel.updateOne({ _id: req.body._id }, body);
+
+      res.json({
+        code: 0,
+        data,
+      });
+    } catch (error) {
+      res.json({
+        code: 500,
+        message: error?.message,
+      });
+    }
+  });
+
+  router.delete("/:id", async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const data = await LeaveFormModel.updateOne(
+        { _id: id },
+        { deleted: true }
+      );
 
       res.json({
         code: 0,

@@ -9,6 +9,8 @@ const modelSchema = new Schema(
     dateApply: { type: Date },
     note: { type: String },
     allMember: { type: Boolean, default: false },
+
+    deleted: { type: Boolean },
   },
   {
     // _id: false,

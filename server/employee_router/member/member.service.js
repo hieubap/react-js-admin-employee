@@ -15,6 +15,7 @@ const memberService = async (app) => {
           { fullname: { $regex: text, $options: "i" } },
           { codeMember: { $regex: text, $options: "i" } },
         ],
+        deleted: { $ne: true },
       });
       res.json({
         code: 0,
@@ -37,6 +38,7 @@ const memberService = async (app) => {
               $regex: req.query?.text,
               $options: "i",
             },
+            deleted: { $ne: true },
           },
         },
         {
@@ -72,6 +74,9 @@ const memberService = async (app) => {
                       { $in: ["$$memberId", "$memberIds"] },
                       { $eq: ["$allMember", true] },
                     ],
+                  },
+                  deleted: {
+                    $ne: true,
                   },
                 },
               },
@@ -115,6 +120,23 @@ const memberService = async (app) => {
     try {
       const body = req.body;
       const data = await MemberModel.updateOne({ _id: req.body._id }, body);
+
+      res.json({
+        code: 0,
+        data,
+      });
+    } catch (error) {
+      res.json({
+        code: 500,
+        message: error?.message,
+      });
+    }
+  });
+
+  router.delete("/:id", async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const data = await MemberModel.updateOne({ _id: id }, { deleted: true });
 
       res.json({
         code: 0,

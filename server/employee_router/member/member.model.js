@@ -15,6 +15,8 @@ const modelSchema = new Schema(
     bankName: { type: String },
     bankNumber: { type: String },
     note: { type: String },
+
+    deleted: {type: Boolean}
   },
   {
     // _id: false,

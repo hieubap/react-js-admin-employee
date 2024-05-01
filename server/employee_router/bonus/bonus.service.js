@@ -1,6 +1,5 @@
 const { Router } = require("express");
-const MemberModel = require("./bonus.model");
-const moment = require("moment");
+const BonusModel = require("./bonus.model");
 
 const router = Router();
 
@@ -9,8 +8,9 @@ const bonusService = async (app) => {
 
   router.get("", async (req, res, next) => {
     try {
-      const data = await MemberModel.find({
+      const data = await BonusModel.find({
         nameBonus: { $regex: req.query?.text || "", $options: "i" },
+        deleted: { $ne: true },
       });
       res.json({
         code: 0,
@@ -26,7 +26,12 @@ const bonusService = async (app) => {
 
   router.get("/statistics-salary", async (req, res, next) => {
     try {
-      const data = await MemberModel.aggregate([
+      const data = await BonusModel.aggregate([
+        {
+          $match: {
+            deleted: { $ne: true },
+          },
+        },
         {
           $addFields: {
             memberId: { $toString: "$_id" },
@@ -69,7 +74,7 @@ const bonusService = async (app) => {
   router.post("", async (req, res, next) => {
     try {
       const body = req.body;
-      const data = new MemberModel(body);
+      const data = new BonusModel(body);
       await data.save();
       res.json({
         code: 0,
@@ -86,7 +91,24 @@ const bonusService = async (app) => {
   router.put("", async (req, res, next) => {
     try {
       const body = req.body;
-      const data = await MemberModel.updateOne({ _id: req.body._id }, body);
+      const data = await BonusModel.updateOne({ _id: req.body._id }, body);
+
+      res.json({
+        code: 0,
+        data,
+      });
+    } catch (error) {
+      res.json({
+        code: 500,
+        message: error?.message,
+      });
+    }
+  });
+
+  router.delete("/:id", async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const data = await BonusModel.updateOne({ _id: id }, { deleted: true });
 
       res.json({
         code: 0,
