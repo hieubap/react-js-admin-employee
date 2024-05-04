@@ -158,10 +158,38 @@ function Payroll() {
       const checkInOutData = state.checkingList.filter(
         (i) => i.userId == item._id
       );
-      const dayOff = item.leaveForms.filter(
-        (i) =>
-          moment(i.fromDate,"DD/MM/YYYY").format("MMYYYY") == state.month.format("MMYYYY")
-      ).length;
+      console.log(
+        item.leaveForms.filter(
+          (i) =>
+            moment(i.fromDate, "DD/MM/YYYY").format("MMYYYY") ==
+              state.month.format("MMYYYY") ||
+            moment(i.toDate, "DD/MM/YYYY").format("MMYYYY") ==
+              state.month.format("MMYYYY")
+        ),
+        "???"
+      );
+      const dayOff = item.leaveForms
+        .filter(
+          (i) =>
+            moment(i.fromDate, "DD/MM/YYYY").format("MMYYYY") ==
+              state.month.format("MMYYYY") ||
+            moment(i.toDate, "DD/MM/YYYY").format("MMYYYY") ==
+              state.month.format("MMYYYY")
+        )
+        .reduce((a, b) => {
+          const bf = moment(b.fromDate, "DD/MM/YYYY");
+          const end = moment(b.toDate, "DD/MM/YYYY");
+          console.log(bf, "bf");
+          while (
+            bf.format("MM") == state.month.format("MM") &&
+            !bf.isAfter(end)
+          ) {
+            a[bf.format("DD") - 0] = 1;
+            bf.add(1, "day");
+          }
+          return a;
+        }, [])
+        .filter((i) => !!i).length;
       const dayWork = item.checkings.filter(
         (i) =>
           moment(i.checkIn).format("MMYYYY") == state.month.format("MMYYYY")

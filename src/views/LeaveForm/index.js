@@ -119,7 +119,10 @@ function TakeLeave() {
   };
 
   const refreshData = (text = "") => {
-    requestFetch("get", "/employee/leave-form?fullname=" + text).then((res) => {
+    requestFetch(
+      "get",
+      "/employee/leave-form" + (text ? "?fullname=" + text : "")
+    ).then((res) => {
       if (res.code == 0) {
         setState({ data: res.data });
       } else {

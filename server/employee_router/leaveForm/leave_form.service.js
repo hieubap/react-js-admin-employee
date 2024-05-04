@@ -10,15 +10,18 @@ const leaveFormService = async (app) => {
 
   router.get("", async (req, res, next) => {
     try {
+      const query = {
+        deleted: { $ne: true },
+      };
+      if (req.query?.fullname) {
+        query.fullname = {
+          $regex: req.query?.fullname || "",
+          $options: "i",
+        };
+      }
       const data = await LeaveFormModel.aggregate([
         {
-          $match: {
-            fullname: {
-              $regex: req.query?.fullname || "",
-              $options: "i",
-            },
-            deleted: { $ne: true },
-          },
+          $match: query,
         },
         // {
         //   $addFields: {
