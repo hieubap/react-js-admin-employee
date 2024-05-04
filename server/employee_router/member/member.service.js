@@ -42,16 +42,17 @@ const memberService = async (app) => {
           },
         },
         {
-          $addFields: {
-            memberId: { $toString: "$_id" },
+          $lookup: {
+            from: "employee___leave_forms",
+            localField: "codeMember",
+            foreignField: "code",
+            as: "leaveForms",
           },
         },
         {
-          $lookup: {
-            from: "employee___leave_forms",
-            localField: "memberId",
-            foreignField: "ownerId",
-            as: "leaveForms",
+          $addFields: {
+            memberId: { $toString: "$_id" },
+            dayOff: { $size: "$leaveForms" },
           },
         },
         {
