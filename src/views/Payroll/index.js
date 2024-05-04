@@ -160,7 +160,7 @@ function Payroll() {
       );
       const dayOff = item.leaveForms.filter(
         (i) =>
-          moment(i.fromDate).format("MMYYYY") == state.month.format("MMYYYY")
+          moment(i.fromDate,"DD/MM/YYYY").format("MMYYYY") == state.month.format("MMYYYY")
       ).length;
       const dayWork = item.checkings.filter(
         (i) =>
