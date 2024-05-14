@@ -63,7 +63,7 @@ function ModalManager({ visible, setVisible, onSuccess = () => {}, data }) {
   const onChange = (key) => (e) => {
     const newData = {
       ...state.modalData,
-      [key]: typeof e == "string" ? e : e.target?.value || "",
+      [key]: typeof e == "object" ? e.target?.value : e || "",
     };
     // dataRef.current[key] = e.target?.value || e;
     setState({ modalData: newData });
@@ -136,7 +136,7 @@ function ModalManager({ visible, setVisible, onSuccess = () => {}, data }) {
                           value: 2,
                         },
                       ]}
-                      value={state.modalData.gender || 1}
+                      value={state.modalData.gender - 0 || 1}
                       onChange={onChange("gender")}
                     />
                   </div>
